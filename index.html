@@ -4,8 +4,7 @@
     <title>
       Simple Places Autocomplete
     </title>
-    <script type="module" src="https://unpkg.com/@googlemaps/extended-component-library@0.6">
-    </script>
+    <script type="module" src="https://unpkg.com/@googlemaps/extended-component-library@0.6"></script>
     <style>
       body {
         padding: 25px;
@@ -17,20 +16,67 @@
         display: flex;
         justify-content: center;
         align-items: center;
+        flex-direction: column;
       }
 
       #place-picker-container {
         text-align: left;
+        margin-bottom: 10px;
+      }
+
+      #copy-button {
+        display: none; /* Hide by default */
+        padding: 8px 16px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px;
+      }
+
+      #copy-button:hover {
+        background-color: #0056b3;
       }
     </style>
   </head>
   <body>
-    <gmpx-api-loader key="AIzaSyC9Ri8zWrgGlPq6a-ZjxsYdfIWxliPMI24" solution-channel="GMP_GE_placepicker_v1">
-    </gmpx-api-loader>
+    <gmpx-api-loader key="AIzaSyC9Ri8zWrgGlPq6a-ZjxsYdfIWxliPMI24" solution-channel="GMP_GE_placepicker_v1"></gmpx-api-loader>
     <div id="place-picker-box">
       <div id="place-picker-container">
-        <gmpx-place-picker placeholder="Enter an address"></gmpx-place-picker>
+        <gmpx-place-picker id="place-picker" placeholder="Enter an address"></gmpx-place-picker>
       </div>
+      <button id="copy-button">Copy to Clipboard</button>
     </div>
+    <script>
+      // Get references to the place picker and button
+      const placePicker = document.getElementById("place-picker");
+      const copyButton = document.getElementById("copy-button");
+
+      // Listen for changes to the place picker
+      placePicker.addEventListener("place_changed", () => {
+        // Show the copy button when an address is selected
+        copyButton.style.display = "inline-block";
+      });
+
+      // Add click event listener to the copy button
+      copyButton.addEventListener("click", () => {
+        // Retrieve the selected address from the place picker
+        const selectedPlace = placePicker.value;
+
+        if (selectedPlace) {
+          // Copy the address to the clipboard
+          navigator.clipboard.writeText(selectedPlace)
+            .then(() => {
+              alert("Address copied to clipboard!");
+            })
+            .catch(err => {
+              console.error("Failed to copy: ", err);
+            });
+        } else {
+          alert("No address selected!");
+        }
+      });
+    </script>
   </body>
 </html>
